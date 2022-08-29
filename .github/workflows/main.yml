@@ -1,0 +1,36 @@
+
+name: CI
+
+on:
+
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          npm install 
+          npm run build
+        env:
+          REACT_APP_API_KEY : ${{ secrets.REACT_APP_API_KEY }}
+          
+      - name : Deploy
+          uses : JamesIves/github-pages-deploy-action@releases/v4
+          with : 
+            GITHUB_TOKEN : ${{secret.GH_TOKEN}}
+            BRANCH : gh-pages
+            FOLDER : build
+
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
